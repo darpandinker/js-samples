@@ -19,5 +19,5 @@ function perm(str, prefix) {
   }
 }
 
-perm("abc", "");
+perm("abcd", "");
 console.log("count="+ count);
