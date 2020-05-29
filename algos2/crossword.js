@@ -72,8 +72,11 @@ console.log( "VISITING [" + i + "," + j + "]=" + ch );
 		let e = expect[ k ];
 		if ( e.r === i && e.c === j ) {
 			if ( ch === search[ e.s ] ) {
-				console.log( "matched expectation at search index " + e.s );
+				console.log( "matched expectation at search index ", e );
 				if ( e.s === search.length - 1 ){
+					let fr = (e.d & 0x01) ? i - e.s: i;
+					let fc = (e.d & 0x10) ? j - e.s: j;
+					console.log( "FOUND SEARCH at " + fr + ", " + fc );
 					return true;
 				}
 				switch ( e.d ) {
@@ -116,9 +119,14 @@ console.log( "VISITING [" + i + "," + j + "]=" + ch );
 		}
 	}
 	let found = false;
-	found = found || xwdSearch( xwd, search, i, j + 1, options ); //Visit node on right
-	found = found || xwdSearch( xwd, search, i + 1, j, options ); //Visit node below
-	found = found || xwdSearch( xwd, search, i + 1, j + 1, options ); //Visit node diagnally
+	if ( totCols - j === 1 ) {
+		found = found || xwdSearch( xwd, search, i+1, 0, options ); //Visit node next row
+	} else {
+		found = found || xwdSearch( xwd, search, i, j + 1, options ); //Visit node on right
+	}
+
+//	found = found || xwdSearch( xwd, search, i + 1, j, options ); //Visit node below
+//	found = found || xwdSearch( xwd, search, i + 1, j + 1, options ); //Visit node diagnally
 
 	return found;
 }
