@@ -1,4 +1,3 @@
-
 import * as UTILS from "./utils";
 
 "use strict";
@@ -6,39 +5,44 @@ import * as UTILS from "./utils";
 function partition( data, start, end, compare, swap, stats ) {
 
 	let pivot = data[ end - 1 ]; //Last Element as Pivot
-	let pIndex = 0;
-	for ( let i = 0; i < end; i++ ) {
-		if ( data[ i ] <= pivot ) {
+	//pivot = data[ Math.floor( ( start + end ) / 2 ) ];
+
+	let pIndex = start;
+	for ( let i = start; i < end; i++ ) {
+		if ( compare( data[ i ], pivot ) <= 0 ) {
 			swap( data, i, pIndex++ );
-			stats.nWrites+=2;
+			stats.nWrites += 2;
 		}
 	}
-	stats.nComps += end;
+	stats.nComps += end - start;
+	//console.log( stats );
 	return pIndex - 1; //The new pivot index
 }
 
-function sort( data, start, end, compare, swap, stats ) {
+export default function sort( data=[], start=0, end=data.length,
+                              { compare= UTILS.compare, swap = UTILS.swap, stats =  { nComps: 0, nWrites: 0 } } = {} ) {
 	if ( start >= end ) {
 		return;
 	}
-	start = start || 0;
-	end = end || data.length;
-	compare = compare || UTILS.compare;
-	swap = swap || UTILS.swap;
 
-	stats = stats || { nComps: 0, nWrites: 0 };
+	//stats = stats || { nComps: 0, nWrites: 0 };
 	const pIndex = partition( data, start, end, compare, swap, stats );
-	sort( data, start, pIndex, compare, swap, stats );
-	sort( data, pIndex + 1, end, compare, swap, stats );
+	sort( data, start, pIndex, { compare:compare, swap:swap, stats:stats } );
+	sort( data, pIndex + 1, end, { compare:compare, swap:swap, stats:stats});
 
 	return stats;
 }
 
-let arr = UTILS.makeArray();
-console.time( "QuickSort" );
-const stats = sort( arr );
-console.timeEnd( "QuickSort" );
+function test() {
+	let origArr = UTILS.makeArray();
+	let arr = [...origArr];
+	console.time( "QuickSort" );
+	const stats = sort( arr );
+	console.timeEnd( "QuickSort" );
 
-console.log( arr.slice( 0, 5 ) + " ... " + arr.slice( -5 ) );
-console.log( "Sorted:" + UTILS.checkSorted( arr ) );
-console.log( "#writes=" + stats.nWrites + " #compares=" + stats.nComps );
+	console.log( arr.slice( 0, 5 ) + " ... " + arr.slice( -5 ) );
+	console.log( "Sorted:" + UTILS.checkSorted( arr, origArr ) );
+	console.log( "Stats:", stats );
+}
+
+//test();

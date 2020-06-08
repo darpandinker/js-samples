@@ -3,26 +3,15 @@
 
 import * as UTILS from "./utils";
 
-function rotateRight( ar, start, end ) {
-	let tmp = ar[ end ];
-	for ( let i = end; i > start; i-- ) {
-		ar[ i ] = ar[ i - 1 ];
-	}
-	ar[ start ] = tmp;
-}
+export default function sort( data=[], start=0, end=data.length,  { compare= UTILS.compare } = {}  ) {
 
-function sort( data, start, end, compare ) {
-	start = start || 0;
-	end = end || data.length;
-	compare = compare || UTILS.compare;
-
-	let stats = { nComps: 0, nMoves: 0 };
+	let stats = { nComps: 0, nWrites: 0 };
 	for ( let i = start + 1; i < end; i++ ) {
 		for ( let j = start; j < i; j++ ) {
 			stats.nComps++;
 			if ( compare( data[ i ], data[ j ] ) < 0 ) {
-				rotateRight( data, j, i );
-				stats.nMoves += i - j;
+				UTILS.rotateRight( data, j, i );
+				stats.nWrites += i - j;
 				break;
 			}
 		}
@@ -30,11 +19,14 @@ function sort( data, start, end, compare ) {
 	return stats;
 }
 
-let arr = UTILS.makeArray();
-console.time( "InsertionSort" );
-const stats = sort( arr );
-console.timeEnd( "InsertionSort" );
+function test() {
+	let origArr = UTILS.makeArray();
+	let arr = [...origArr];
+	console.time( "InsertionSort" );
+	const stats = sort( arr );
+	console.timeEnd( "InsertionSort" );
 
-console.log( arr.slice( 0, 5 ) + " ... " + arr.slice( -5 ) );
-console.log( "Sorted:" + UTILS.checkSorted( arr ) );
-console.log( "Stats:", stats );
+	console.log( arr.slice( 0, 5 ) + " ... " + arr.slice( -5 ) );
+	console.log( "Sorted:" + UTILS.checkSorted( arr, origArr ) );
+	console.log( "Stats:", stats );
+}

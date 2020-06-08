@@ -4,11 +4,7 @@
 import * as UTILS from "./utils";
 
 
-function sort( data, start, end, compare, swap ) {
-	start = start || 0;
-	end = end || data.length;
-	compare = compare || UTILS.compare;
-	swap = swap || UTILS.swap;
+export default function sort( data=[], start=0, end=data.length, { compare= UTILS.compare, swap = UTILS.swap } = {} ) {
 
 	let stats = { nComps: 0, nWrites: 0 };
 	for ( let i = start; i < end; i++ ) {
@@ -27,11 +23,14 @@ function sort( data, start, end, compare, swap ) {
 	return stats;
 }
 
-let arr = UTILS.makeArray();
-console.time( "BubbleSort" );
-const stats = sort( arr );
-console.timeEnd( "BubbleSort" );
+function test() {
+	let origArr = UTILS.makeArray();
+	let arr = [...origArr];
+	console.time( "BubbleSort" );
+	const stats = sort( arr );
+	console.timeEnd( "BubbleSort" );
 
-console.log( arr.slice( 0, 5 ) + " ... " + arr.slice( -5 ) );
-console.log( "Sorted:" + UTILS.checkSorted( arr ) );
-console.log( "#swaps=" + stats.nWrites + " #compares=" + stats.nComps );
+	console.log( arr.slice( 0, 5 ) + " ... " + arr.slice( -5 ) );
+	console.log( "Sorted:" + UTILS.checkSorted( arr, origArr ) );
+	console.log( "Stats:", stats );
+}

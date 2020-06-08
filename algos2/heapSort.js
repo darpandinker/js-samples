@@ -1,13 +1,9 @@
 import * as UTILS from "./utils";
-import {Heap} from "./heap";
+import { Heap } from "./heap";
 
 "use strict";
 
-function sort( data, start, end, compare, swap ) {
-	start = start || 0;
-	end = end || data.length;
-	compare = compare || UTILS.compare;
-	swap = swap || UTILS.swap;
+export default function sort( data=[], start=0, end=data.length, { compare= UTILS.compare, swap = UTILS.swap } = {} ) {
 
 	let stats = { nComps: 0, nWrites: 0 };
 	let h = new Heap( data, compare, swap, stats );
@@ -18,15 +14,18 @@ function sort( data, start, end, compare, swap ) {
 		h.heapify( 0 );
 		//h.print();
 	}
-	
+
 	return stats;
 }
 
-let arr = UTILS.makeArray();
-console.time( "HeapSort" );
-const stats = sort( arr );
-console.timeEnd( "HeapSort" );
+function test() {
+	let origArr = UTILS.makeArray();
+	let arr = [...origArr];
+	console.time( "HeapSort" );
+	const stats = sort( arr );
+	console.timeEnd( "HeapSort" );
 
-console.log( arr.slice( 0, 5 ) + " ... " + arr.slice( -5 ) );
-console.log( "Sorted:" + UTILS.checkSorted( arr ) );
-console.log( stats );
+	console.log( arr.slice( 0, 5 ) + " ... " + arr.slice( -5 ) );
+	console.log( "Sorted:" + UTILS.checkSorted( arr, origArr ) );
+	console.log( "Stats:", stats );
+}
