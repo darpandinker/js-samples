@@ -27,6 +27,6 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.10.1",
-    "printf": "^0.5.3"
+    "printf": "^0.6.1"
   }
 }
